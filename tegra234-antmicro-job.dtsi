@@ -20,6 +20,7 @@
 #include "tegra234-antmicro-job-i2c-buses.dtsi"
 #include "tegra234-antmicro-job-gpioex.dtsi"
 #include "tegra234-antmicro-job-usb.dtsi"
+#include "tegra234-antmicro-job-pcie.dtsi"
 
 /* 4xOV5640 cameras */
 #include "tegra234-antmicro-job-camera-ov5640.dtsi"
