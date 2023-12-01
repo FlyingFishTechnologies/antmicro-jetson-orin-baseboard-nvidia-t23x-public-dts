@@ -22,9 +22,6 @@
 #include "tegra234-antmicro-job-usb.dtsi"
 #include "tegra234-antmicro-job-pcie.dtsi"
 
-/* 4xOV5640 cameras */
-#include "tegra234-antmicro-job-camera-ov5640.dtsi"
-
 / {
 	/delete-node/ gpio-keys;
 	gpio-keys {
