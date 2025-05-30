@@ -16,6 +16,7 @@
 #include <dt-bindings/input/input.h>
 #include <dt-bindings/leds/common.h>
 
+#include "tegra234-antmicro-job-pinmux.dtsi"
 #include "tegra234-antmicro-job-fixed-regulators.dtsi"
 #include "tegra234-antmicro-job-i2c-buses.dtsi"
 #include "tegra234-antmicro-job-gpioex.dtsi"
