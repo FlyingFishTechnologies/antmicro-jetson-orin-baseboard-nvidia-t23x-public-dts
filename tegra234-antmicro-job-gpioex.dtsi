@@ -33,11 +33,6 @@
 		interrupt-controller;
 		#interrupt-cells = <2>;
 
-		usbc1_pen-hog {
-			gpio-hog;
-			gpios = <2 GPIO_ACTIVE_HIGH>;
-			output-high;
-		};
 		disable_poe_dcdc-hog {
 			gpio-hog;
 			gpios = <3 GPIO_ACTIVE_HIGH>;

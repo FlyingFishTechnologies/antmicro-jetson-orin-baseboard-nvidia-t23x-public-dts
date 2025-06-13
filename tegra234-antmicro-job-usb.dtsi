@@ -113,11 +113,11 @@
 					vbus-supply = <&job_reg_5v>;
 					usb-role-switch;
 					connector {
-						compatible = "usb-b-connector", "gpio-usb-b-connector";
+						compatible = "gpio-usb-b-connector", "usb-b-connector";
 						label = "micro-USB";
 						type = "micro";
 						vbus-gpios = <&gpio TEGRA234_MAIN_GPIO(Z, 1) GPIO_ACTIVE_LOW>;
-						id-gpios = <&job_gpio_expander 2 GPIO_ACTIVE_LOW>;
+						id-gpios = <&job_gpio_expander 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
 					};
 				};
 				usb3-2 {
