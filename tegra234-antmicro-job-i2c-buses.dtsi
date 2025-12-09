@@ -22,24 +22,28 @@
 		job_cam0_i2c: i2c@0 {
 			#address-cells = <1>;
 			#size-cells = <0>;
+			i2c-mux,deselect-on-exit;
 			reg = <0>;
 		};
 
 		job_cam1_i2c: i2c@1 {
 			#address-cells = <1>;
 			#size-cells = <0>;
+			i2c-mux,deselect-on-exit;
 			reg = <1>;
 		};
 
 		job_cam2_i2c: i2c@2 {
 			#address-cells = <1>;
 			#size-cells = <0>;
+			i2c-mux,deselect-on-exit;
 			reg = <2>;
 		};
 
 		job_cam3_i2c: i2c@3 {
 			#address-cells = <1>;
 			#size-cells = <0>;
+			i2c-mux,deselect-on-exit;
 			reg = <3>;
 		};
 	};
