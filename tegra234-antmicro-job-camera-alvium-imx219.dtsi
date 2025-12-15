@@ -17,15 +17,53 @@
  */
 
 #include "imx219-default-mode.h"
+#include "alvium-default-mode.h"
 
  // Camera nodes
+ &job_cam0_i2c {
+	avt_csi2_a@3c {
+		status = "okay";
+		reg = <0x3c>;
+		compatible = "alliedvision,avt_csi2";
+		
+
+		devnode = "video0";
+		avt3,userptr;
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+				avt_csi2_out0: endpoint {
+					port-index = <0>;
+					bus-width = <4>;
+					data-lanes = <1 2 3 4>;
+					clock-lanes = <0>;
+					link-frequencies = /bits/ 64 <400000000>;
+					remote-endpoint = <&avt_csi2_csi_in0>;
+				};
+			};
+		};
+
+		mode0 {
+			num_lanes = "4";
+			tegra_sinterface = "serial_a";
+			lane_polarity = "0";
+
+			ALVIUM_DEFAULT_MODE
+		};
+	};
+};
+
  &job_cam1_i2c {
  	imx219_cam0: camera@10 {
 		compatible = "sony,imx219";
 		/* I2C device address */
 		reg = <0x10>;
 		/* V4L2 device node location */
-		devnode = "video0";
+		devnode = "video1";
 		/* Physical dimensions of sensor */
 		physical_w = "3.680";
 		physical_h = "2.760";
@@ -33,7 +71,7 @@
 		use_sensor_mode_id = "true";
 
 		reset-gpios = <&gpio TEGRA234_MAIN_GPIO(G, 6) GPIO_ACTIVE_HIGH>;
-		avdd-reg = "job_reg_csia_3v3";
+		/* avdd-reg = "job_reg_csia_3v3"; */
 
 		mode0 { /* IMX219_MODE_3280x2464_21FPS */
 			num_lanes = "2";
@@ -93,7 +131,7 @@
 				rbpcv2_imx219_out0: endpoint {
 					port-index = <2>;
 					bus-width = <2>;
-					remote-endpoint = <&rbpcv2_imx219_csi_in0>;
+					remote-endpoint = <&rbpcv2_imx219_csi_in1>;
 				};
 			};
 		};
@@ -104,17 +142,44 @@
 	bus@0 {
 		host1x@13e00000 {
 			nvcsi@15a00000 {
-				num-channels = <1>;
+				num-channels = <2>;
 				#address-cells = <1>;
 				#size-cells = <0>;
 				channel@0 {
+					status = "okay";
 					reg = <0>;
+					ports {
+						#address-cells = <1>;
+						#size-cells = <0>;
+						status = "okay";
+						port@0 {
+							status = "okay";
+							reg = <0>;
+							avt_csi2_csi_in0: endpoint@0 {
+								status = "okay";
+								port-index = <0>;
+								bus-width = <4>;
+								remote-endpoint = <&avt_csi2_out0>;
+							};
+						};
+						port@1 {
+							status = "okay";
+							reg = <1>;
+							avt_csi2_csi_out0: endpoint@1 {
+								status = "okay";
+								remote-endpoint = <&avt_csi2_vi_in0>;
+							};
+						};
+					};
+				};
+				channel@1 {
+					reg = <1>;
 					ports {
 						#address-cells = <1>;
 						#size-cells = <0>;
 						port@0 {
 							reg = <0>;
-							rbpcv2_imx219_csi_in0: endpoint@0 {
+							rbpcv2_imx219_csi_in1: endpoint@2 {
 								port-index = <2>;
 								bus-width = <2>;
 								remote-endpoint = <&rbpcv2_imx219_out0>;
@@ -122,10 +187,10 @@
 						};
 						port@1 {
 							reg = <1>;
-							rbpcv2_imx219_csi_out0: endpoint@1 {
+							rbpcv2_imx219_csi_out1: endpoint@3 {
 								port-index = <2>;
 								bus-width = <2>;
-								remote-endpoint = <&rbpcv2_imx219_vi_in0>;
+								remote-endpoint = <&rbpcv2_imx219_vi_in1>;
 							};
 						};
 					};
@@ -142,17 +207,45 @@
 		};
 	};
 
+	avt_csitl {
+		supported_data_types = [ 31 ];
+		min_announced_frames = <1>;
+
+		ipu {
+			y_min = <32>;
+			y_inc = <1>;
+			y_max = <32768>;
+			x_min = <256>;
+			x_inc = <192>;
+			x_max = <32768>;
+		};
+	};
+
 	tegra-capture-vi {
-		num-channels = <1>;
+		status = "okay";
+		compatible = "alliedvision,tegra-camrtc-capture-vi", "nvidia,tegra-camrtc-capture-vi";
+		num-channels = <2>;
 		ports {
 			#address-cells = <1>;
 			#size-cells = <0>;
+			status = "okay";
 			port@0 {
+				status = "okay";
 				reg = <0>;
-				rbpcv2_imx219_vi_in0: endpoint {
+				avt_csi2_vi_in0: endpoint {
+					status = "okay";
+					port-index = <0>;
+					bus-width = <4>;
+					remote-endpoint = <&avt_csi2_csi_out0>;
+				};
+			};
+			port@1 {
+				status = "okay";
+				reg = <1>;
+				rbpcv2_imx219_vi_in1: endpoint {
 					port-index = <2>;
 					bus-width = <2>;
-					remote-endpoint = <&rbpcv2_imx219_csi_out0>;
+					remote-endpoint = <&rbpcv2_imx219_csi_out1>;
 				};
 			};
 		};
@@ -162,9 +255,9 @@
 		compatible = "nvidia, tegra-camera-platform";
 		status = "okay";
 
-		num_csi_lanes = <2>;
+		num_csi_lanes = <6>;
 		max_lane_speed = <1500000>;
-		min_bits_per_pixel = <10>;
+		min_bits_per_pixel = <8>;
 		vi_peak_byte_per_pixel = <2>;
 		vi_bw_margin_pct = <25>;
 		max_pixel_rate = <240000>;
@@ -173,14 +266,26 @@
 
 		modules {
 			cam_module0: module0 {
-				badge = "jakku_front_RBP194";
+				status = "okay";
+				badge = "avt_csi2_a";
 				position = "front";
 				orientation = "1";
 				cam_module0_drivernode0: drivernode0 {
+					status = "okay";
+					pcl_id = "v4l2_sensor";
+					devname = "avt_csi2_a";
+					proc-device-tree = "/proc/device-tree/bus@0/i2c@3180000/pca9548@70/i2c@0/avt_csi2_a@3c";
+				};
+			};
+			cam_module1: module1 {
+				badge = "jakku_front_RBP194";
+				position = "rear";
+				orientation = "1";
+				cam_module1_drivernode0: drivernode0 {
 					pcl_id = "v4l2_sensor";
 					sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/i2c@3180000/pca9548@70/i2c@1/camera@10";
 				};
-				cam_module0_drivernode1: drivernode1 {
+				cam_module1_drivernode1: drivernode1 {
 					pcl_id = "v4l2_lens";
 					sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/lens_imx219@RBPCV2";
 				};

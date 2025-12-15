@@ -59,6 +59,7 @@
 		vin-supply = <&job_reg_3v3>;
 		gpio = <&job_gpio_expander 0 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
+		regulator-always-on;
 		startup-delay-us = <10000>;
 	};
 

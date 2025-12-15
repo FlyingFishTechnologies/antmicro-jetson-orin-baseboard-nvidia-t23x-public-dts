@@ -20,6 +20,7 @@ dtb-y += tegra234-p3767-0003-antmicro-job-ov9281.dtb
 dtb-y += tegra234-p3767-0004-antmicro-job-ov9281.dtb
 
 dtb-y += tegra234-p3767-0000-antmicro-job-imx219.dtb
+dtb-y += tegra234-p3767-0000-antmicro-job-alvium-imx219.dtb
 
 ifneq ($(dtb-y),)
 dtb-y := $(addprefix $(makefile-path)/,$(dtb-y))
